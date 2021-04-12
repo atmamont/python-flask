@@ -1,14 +1,13 @@
 from flask import Flask, redirect, url_for, render_template, request, session
 from flask import flash
 from flask_sqlalchemy import SQLAlchemy
+from config import Config
 from datetime import timedelta
 
 
 app = Flask(__name__)
-app.secret_key = "secret_key_1"
 app.permanent_session_lifetime = timedelta(minutes=60)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///users.sqlite3"
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config.from_object(Config)
 db = SQLAlchemy(app=app)
 
 
