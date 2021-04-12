@@ -3,6 +3,7 @@ from flask import flash
 from flask_sqlalchemy import SQLAlchemy
 from config import Config
 from datetime import timedelta
+from forms import LoginForm
 
 
 app = Flask(__name__)
@@ -34,9 +35,10 @@ def view():
 
 @app.route("/login", methods=["POST", "GET"])
 def login():
+    form = LoginForm()
     if request.method == "POST":
         session.permanent = True
-        user = request.form["name"]
+        user = request.form["username"]
         session["user"] = user
 
         found_user = Users.query.filter_by(name=user).first()
@@ -53,7 +55,7 @@ def login():
         if "user" in session:
             return redirect(url_for("user"))
 
-        return render_template("login.html")
+        return render_template("login.html", form=form)
 
 
 @app.route("/user", methods=["POST", "GET"])
