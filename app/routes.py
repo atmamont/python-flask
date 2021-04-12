@@ -27,11 +27,13 @@ def login():
         user = form.username.data
         session["user"] = user
 
-        found_user = User.query.filter_by(name=user).first()
+        found_user = User.query.filter_by(username=user).first()
         if found_user:
             session["email"] = found_user.email
         else:
-            usr = User(user, "")
+            usr = User()
+            usr.username = user
+
             db.session.add(usr)
             db.session.commit()
 
