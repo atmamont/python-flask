@@ -5,7 +5,6 @@ from config import Config
 from datetime import timedelta
 from forms import LoginForm
 
-
 app = Flask(__name__)
 app.permanent_session_lifetime = timedelta(minutes=60)
 app.config.from_object(Config)
@@ -36,9 +35,8 @@ def view():
 @app.route("/login", methods=["POST", "GET"])
 def login():
     form = LoginForm()
-    if request.method == "POST":
-        session.permanent = True
-        user = request.form["username"]
+    if form.validate_on_submit():
+        user = form.username.data
         session["user"] = user
 
         found_user = Users.query.filter_by(name=user).first()
@@ -49,13 +47,13 @@ def login():
             db.session.add(usr)
             db.session.commit()
 
-        flash("Logged in successfully", "info")
+        flash(f"Logged in {user} successfully", "info")
         return redirect(url_for("user"))
-    else:
-        if "user" in session:
-            return redirect(url_for("user"))
 
-        return render_template("login.html", form=form)
+    if "user" in session:
+        return redirect(url_for("user"))
+
+    return render_template("login.html", form=form)
 
 
 @app.route("/user", methods=["POST", "GET"])
