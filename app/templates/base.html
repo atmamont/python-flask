@@ -15,30 +15,32 @@
 	  <li class="nav-item">
 	    <a class="nav-link" href="/view">Users</a>
 	  </li>
-	  {% if "user" in session %}
+	  {% if current_user.is_anonymous %}
 	  <li class="nav-item">
-	    <a class="nav-link" href="/logout">Logout</a>
+	    <a class="nav-link" href="/login">Login</a>
 	  </li>
 	  {% else %}
 	  <li class="nav-item">
-	    <a class="nav-link" href="/login">Login</a>
+	    <a class="nav-link" href="/logout">Logout</a>
 	  </li>
 	  {% endif %}
 	</ul>
 	<p>
-		<img src="static/img/tenor2.jpeg" class="rounded" width=100>
+		<img src={{url_for('static', filename='images/tenor2.jpeg')}} class="rounded" width=100>
 	</p>
 
-  {% with messages = get_flashed_messages() %}
-    {% if messages %}
-      {% for msg in messages %}
-        <p>{{msg}}</p>
-      {% endfor %}
-    {% endif %}
-  {% endwith%}
+	{% with messages = get_flashed_messages() %}
+		{% if messages %}
+		{% for msg in messages %}
+			<p>{{msg}}</p>
+		{% endfor %}
+		{% endif %}
+	{% endwith%}
 
-  <div class="container-fluid">
+	<div class="container-fluid">
+		<h1>Hello, {{ current_user.username }}</h1>
 		{% block content %}
+		
 		{% endblock %}
 	</div>
 
